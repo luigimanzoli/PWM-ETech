@@ -2,7 +2,7 @@
 #include "pico/stdlib.h" //subconjunto central de bibliotecas do SDK Pico
 #include "hardware/pwm.h" //biblioteca para controlar o hardware de PWM
 
-#define PWM_LED 12 //pino do LED conectado a GPIO como PWM
+#define PWM_LED 22 //pino do LED conectado a GPIO como PWM
 
 const uint16_t WRAP_PERIOD = 49999; //valor máximo do contador - WRAP
 const float PWM_DIVISER = 50.0; //divisor do clock para o PWM
