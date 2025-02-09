@@ -4,10 +4,10 @@
 
 #define PWM_LED 12 //pino do LED conectado a GPIO como PWM
 
-const uint16_t WRAP_PERIOD = 4000; //valor máximo do contador - WRAP
-const float PWM_DIVISER = 4.0; //divisor do clock para o PWM
-const uint16_t LED_STEP = 200; //passo de incremento/decremento para o duty cycle do LED
-uint16_t led_level = 200; //nível inicial do pwm (duty cycle)
+const uint16_t WRAP_PERIOD = 49999; //valor máximo do contador - WRAP
+const float PWM_DIVISER = 50.0; //divisor do clock para o PWM
+const uint16_t LED_STEP = 5000; //passo de incremento/decremento para o duty cycle do LED
+uint16_t led_level = 2000; //nível inicial do pwm (duty cycle)
 
 //função para configurar o módulo PWM
 void pwm_setup()
@@ -23,6 +23,10 @@ void pwm_setup()
     pwm_set_gpio_level(PWM_LED, 100); //definir o cico de trabalho (duty cycle) do pwm
 
     pwm_set_enabled(slice, true); //habilita o pwm no slice correspondente
+
+    int freqPWM = 125000000/((PWM_DIVISER)*(WRAP_PERIOD+1));
+
+    printf("fPWM = %i Hz\n", freqPWM);
 }
 
 
@@ -32,6 +36,8 @@ int main()
     stdio_init_all(); //inicializa o sistema padrão de I/O
     
     pwm_setup(); //configura o PWM
+
+    printf("Sistema inicializado.\n");
 
     uint up_down = 1; //variável para controlar se o nível do LED aumenta ou diminui
 
