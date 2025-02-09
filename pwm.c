@@ -4,10 +4,9 @@
 
 #define PWM_LED 22 //pino do LED conectado a GPIO como PWM
 
-const uint16_t WRAP_PERIOD = 49999; //valor máximo do contador - WRAP
+const uint16_t WRAP_PERIOD = 50000; //valor máximo do contador - WRAP
 const float PWM_DIVISER = 50.0; //divisor do clock para o PWM
 const uint16_t LED_STEP = 5000; //passo de incremento/decremento para o duty cycle do LED
-uint16_t led_level = 2000; //nível inicial do pwm (duty cycle)
 
 //função para configurar o módulo PWM
 void pwm_setup()
@@ -39,28 +38,45 @@ int main()
 
     printf("Sistema inicializado.\n");
 
-    uint up_down = 1; //variável para controlar se o nível do LED aumenta ou diminui
+    printf("Duty Cicle definido para 12%%.\n");
+    pwm_set_gpio_level(PWM_LED, 6000); // Definindo o duty cicle de 12%
+
+    sleep_ms(1000); // Atraso de 5 segundos
+
+    printf("Duty Cicle definido para 7.35%%.\n");
+    pwm_set_gpio_level(PWM_LED, 3675); // Definindo o duty cicle de 7.35%
+
+    sleep_ms(1000); // Atraso de 5 segundos
+
+    printf("Duty Cicle definido para 2.5%%.\n");
+    pwm_set_gpio_level(PWM_LED, 1250); // Definindo o duty cicle de 2.5%
+
+    sleep_ms(1000); // Atraso de 5 segundos
+
+    printf("Variação do Duty Cicle de 2.5%% até 12%%.\n");
+
+    double level = 1250;
+    int control = 1;
 
     while (true) {
 
-        printf("Ciclo ativo:%d\n", led_level);//imprimir ciclo ativo do PWM - valor máximo é 2000
-        
-        pwm_set_gpio_level(PWM_LED, led_level); //define o nível atual do PWM (duty cycle)
-
-        sleep_ms(100); // Atraso de 1 segundo
-
-        if (up_down) 
-        {
-            led_level += LED_STEP; // Incrementa o nível do LED
-            if (led_level >= WRAP_PERIOD)
-                up_down = 0; // Muda direção para diminuir quando atingir o período máximo
+        if (control == 1){
+            pwm_set_gpio_level(PWM_LED, level);
+            level = level + 4.75;
+            sleep_ms(1);
+            
+            if (level == 6000){
+                control = 0;
+            }
         }
-        else
-        {
-            led_level -= LED_STEP; // Decrementa o nível do LED
-            if (led_level <= LED_STEP)
-                up_down = 1; // Muda direção para aumentar quando atingir o mínimo
-        }
+        else if (control == 0){
+            pwm_set_gpio_level(PWM_LED, level);
+            level = level - 4.75;
+            sleep_ms(1);
 
+            if (level == 1250){
+                control = 1;
+            }
+        }
     }
 }
